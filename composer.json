@@ -1,0 +1,17 @@
+{
+	"name": "orckid-lab/laravel-taxonomy",
+	"license": "MIT",
+	"require": {},
+	"autoload": {
+		"psr-4": {
+			"OrckidLab\\LaravelTaxonomy\\": "src"
+		}
+	},
+	"extra": {
+		"laravel": {
+			"providers": [
+				"OrckidLab\\LaravelTaxonomy\\TaxonomyServiceProvider"
+			]
+		}
+	}
+}
