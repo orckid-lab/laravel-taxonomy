@@ -1,7 +1,7 @@
 @extends('taxonomy::layout')
 
 @section('content')
-	<p>list of groups</p>
+	<p>list of taxonomies</p>
 	@if($taxonomies->count())
 		<ul>
 			@foreach($taxonomies as $taxonomy)
