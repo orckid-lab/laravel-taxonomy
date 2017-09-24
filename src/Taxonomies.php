@@ -4,6 +4,7 @@ namespace OrckidLab\LaravelTaxonomy;
 
 use Illuminate\Support\Facades\Route;
 use OrckidLab\LaravelTaxonomy\Models\Taxonomy;
+use OrckidLab\LaravelTaxonomy\Models\Term;
 
 /**
  * Class Options
@@ -34,6 +35,16 @@ class Taxonomies
 	}
 
 	/**
+	 * @param $term
+	 * @param $taxonomy
+	 * @param $column
+	 */
+	public static function findTerm($term, $taxonomy, $column = 'label')
+	{
+		return Term::where($column, $term)->fromTaxonomy($taxonomy)->first();
+	}
+
+	/**
 	 * @param $name
 	 * @return $this
 	 */
@@ -46,7 +57,7 @@ class Taxonomies
 
 	/**
 	 * @param $name
-	 * @return mixed
+	 * @return $this
 	 */
 	public static function create($name)
 	{
@@ -69,11 +80,15 @@ class Taxonomies
 	}
 
 	/**
-	 * @param $option
+	 * @param array|Term $option
 	 * @return $this
 	 */
 	public function add($option)
 	{
+		if(is_array($option)){
+			$option = new Term($option);
+		}
+
 		$this->group->terms()->save($option);
 
 		return $this;
@@ -107,6 +122,14 @@ class Taxonomies
 	}
 
 	/**
+	 * @return array
+	 */
+	public function values()
+	{
+		return $this->group->terms()->pluck('id')->all();
+	}
+
+	/**
 	 * @return \Illuminate\Database\Eloquent\Collection|static[]
 	 */
 	public static function all()
@@ -129,17 +152,30 @@ class Taxonomies
 
 	/**
 	 * Configure routes for managing form options.
+	 * @param string $prefix
+	 * @param array $middleware
 	 */
-	public static function routes()
+	public static function routes($prefix = '', $middleware = [])
 	{
-		Route::resource('term', '\OrckidLab\LaravelTaxonomy\Controller\TermController', [
-			'except' => [
-				'index'
-			]
-		]);
+		$namespace = '\OrckidLab\LaravelTaxonomy\Controller\\';
 
-		Route::resource('taxonomy', '\OrckidLab\LaravelTaxonomy\Controller\TaxonomyController', [
+		$options = [
+			'prefix' => $prefix,
+			'middleware' => $middleware
+		];
 
-		]);
+		Route::group($options, function () use ($namespace) {
+			Route::resource('taxonomy', $namespace . 'TaxonomyController', [
+				'except' => [
+					'create',
+				]
+			]);
+
+			Route::resource('term', $namespace . 'TermController', [
+				'except' => [
+					'index'
+				]
+			]);
+		});
 	}
 }
