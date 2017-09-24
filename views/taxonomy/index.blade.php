@@ -1,4 +1,5 @@
 <p>list of groups</p>
+@if($taxonomies->count())
 <ul>
 	@foreach($taxonomies as $taxonomy)
 	<li>
@@ -6,6 +7,9 @@
 	</li>
 	@endforeach
 </ul>
+@else
+	<p>No taxonomy.</p>
+@endif
 
 @if ($errors->any())
 	<div class="alert alert-danger">

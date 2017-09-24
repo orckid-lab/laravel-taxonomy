@@ -23,6 +23,16 @@
 	@endforeach
 </table>
 
+@if ($errors->any())
+	<div class="alert alert-danger">
+		<ul>
+			@foreach ($errors->all() as $error)
+				<li>{{ $error }}</li>
+			@endforeach
+		</ul>
+	</div>
+@endif
+
 <form action="{{ route('taxonomy.update', ['taxonomy' => $taxonomy]) }}" method="post">
 	{{ csrf_field() }}
 	{{ method_field('patch') }}
