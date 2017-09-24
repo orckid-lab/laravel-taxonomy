@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Term extends Model
 {
+	/**
+	 * @var array
+	 */
 	protected $fillable = [
 		'label',
 		'order'
@@ -21,6 +24,18 @@ class Term extends Model
 	public function taxonomy()
 	{
 		return $this->belongsTo(Taxonomy::class);
+	}
+
+	/**
+	 * @param $query
+	 * @param $taxonomy
+	 * @return mixed
+	 */
+	public function scopeFromTaxonomy($query, $taxonomy)
+	{
+		return $query->whereHas('taxonomy', function ($query) use ($taxonomy) {
+			return $query->where('name', $taxonomy);
+		});
 	}
 
 	/**
