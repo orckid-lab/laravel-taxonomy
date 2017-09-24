@@ -58,7 +58,7 @@ class TermController extends Controller
 	 */
 	public function edit(Term $term)
 	{
-		return view('taxonomy::option.edit')->with([
+		return view('taxonomy::term.edit')->with([
 			'term' => $term
 		]);
 	}
