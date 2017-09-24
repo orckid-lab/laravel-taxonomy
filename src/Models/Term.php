@@ -15,6 +15,7 @@ class Term extends Model
 	 */
 	protected $fillable = [
 		'label',
+		'slug',
 		'order'
 	];
 
@@ -34,7 +35,7 @@ class Term extends Model
 	public function scopeFromTaxonomy($query, $taxonomy)
 	{
 		return $query->whereHas('taxonomy', function ($query) use ($taxonomy) {
-			return $query->where('name', $taxonomy);
+			return $query->where('slug', $taxonomy);
 		});
 	}
 

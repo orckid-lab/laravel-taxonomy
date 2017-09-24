@@ -26,12 +26,12 @@ class Taxonomies
 	}
 
 	/**
-	 * @param $name
+	 * @param $slug
 	 * @return \Illuminate\Database\Eloquent\Builder|static
 	 */
-	public static function find($name)
+	public static function find($slug)
 	{
-		return self::instance()->load($name);
+		return self::instance()->load($slug);
 	}
 
 	/**
@@ -45,34 +45,38 @@ class Taxonomies
 	}
 
 	/**
-	 * @param $name
+	 * @param $slug
 	 * @return $this
 	 */
-	public function load($name)
+	public function load($slug)
 	{
-		$this->group = Taxonomy::where('name', $name)->firstOrFail();
+		$this->group = Taxonomy::where('slug', $slug)->firstOrFail();
 
 		return $this;
 	}
 
 	/**
-	 * @param $name
+	 * @param $label
+	 * @param $slug
 	 * @return $this
 	 */
-	public static function create($name)
+	public static function create($label, $slug = null)
 	{
-		return (new static)->make($name);
+		return (new static)->make($label, $slug);
 	}
 
 	/**
-	 * @param $name
+	 * @param $label
+	 * @param null $slug
 	 * @return $this
 	 */
-	public function make($name)
+	public function make($label, $slug)
 	{
 		$this->group = new Taxonomy;
 
-		$this->group->name = $name;
+		$this->group->label = $label;
+
+		$this->group->slug = !$slug ? str_slug($label) : $slug;
 
 		$this->group->save();
 
@@ -80,27 +84,31 @@ class Taxonomies
 	}
 
 	/**
-	 * @param array|Term $option
+	 * @param array|Term $term
 	 * @return $this
 	 */
-	public function add($option)
+	public function add($term)
 	{
-		if(is_array($option)){
-			$option = new Term($option);
+		if(is_array($term)){
+			$term = new Term($term);
+
+			if(!isset($term['slug'])){
+				$term->slug = str_slug($term->label);
+			}
 		}
 
-		$this->group->terms()->save($option);
+		$this->group->terms()->save($term);
 
 		return $this;
 	}
 
 	/**
-	 * @param $options
+	 * @param $terms
 	 * @return $this
 	 */
-	public function addMany($options)
+	public function addMany($terms)
 	{
-		$this->group->terms()->saveMany($options);
+		$this->group->terms()->saveMany($terms);
 
 		return $this;
 	}
@@ -110,7 +118,7 @@ class Taxonomies
 	 */
 	public function get()
 	{
-		return $this->group->options;
+		return $this->group->terms;
 	}
 
 	/**
@@ -171,9 +179,16 @@ class Taxonomies
 				]
 			]);
 
+			Route::post('taxonomy/{taxonomy}/term', $namespace . 'TermController@store')->name('term.store');
+
+			Route::get('taxonomy/{taxonomy}/term/{term}/edit', $namespace . 'TermController@edit')->name('term.edit');
+
+			//Route::patch('taxonomy/{taxonomy}/term/{term}/update}', $namespace . 'TermController@update')->name('term.update');
+
 			Route::resource('term', $namespace . 'TermController', [
-				'except' => [
-					'index'
+				'only' => [
+					'update',
+					'destroy'
 				]
 			]);
 		});

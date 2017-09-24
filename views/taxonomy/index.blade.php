@@ -3,7 +3,7 @@
 <ul>
 	@foreach($taxonomies as $taxonomy)
 	<li>
-		<a href="{{ route('taxonomy.edit', ['taxonomy' => $taxonomy])  }}">{{ $taxonomy->name }}</a>
+		<a href="{{ route('taxonomy.edit', ['taxonomy' => $taxonomy])  }}">{{ $taxonomy->label }}</a>
 	</li>
 	@endforeach
 </ul>
@@ -11,22 +11,14 @@
 	<p>No taxonomy.</p>
 @endif
 
-@if ($errors->any())
-	<div class="alert alert-danger">
-		<ul>
-			@foreach ($errors->all() as $error)
-				<li>{{ $error }}</li>
-			@endforeach
-		</ul>
-	</div>
-@endif
+@include('taxonomy::_errors')
 
-<p>Add a group of options.</p>
-<form action="{{ route('taxonomy.store') }}" method="post">
+<p>Add a taxonomy.</p>
+<form id="form-add-taxonomy" action="{{ route('taxonomy.store') }}" method="post">
 	{{ csrf_field() }}
 	<fieldset>
-		<label for="name">Name</label>
-		<input id="name" type="text" name="name"/>
+		<label for="label">Label</label>
+		<input id="label" type="text" name="label"/>
 	</fieldset>
-	<button type="submit">Add</button>
+	<button type="submit">Add taxonomy</button>
 </form>

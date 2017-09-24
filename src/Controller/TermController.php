@@ -4,50 +4,29 @@ namespace OrckidLab\LaravelTaxonomy\Controller;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use OrckidLab\LaravelTaxonomy\Models\Taxonomy;
 use OrckidLab\LaravelTaxonomy\Models\Term;
 
 class TermController extends Controller
 {
 	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function index()
-	{
-		//
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function create()
-	{
-		//
-	}
-
-	/**
 	 * Store a newly created resource in storage.
 	 *
 	 * @param  \Illuminate\Http\Request $request
+	 * @param Taxonomy $taxonomy
 	 * @return \Illuminate\Http\Response
 	 */
-	public function store(Request $request)
+	public function store(Request $request, Taxonomy $taxonomy)
 	{
-		//
-	}
+		if(!$request->has('slug')){
+			$request->offsetSet('slug', str_slug($request->label));
+		}
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show($id)
-	{
-		//
+		$term = new Term($request->all());
+
+		$taxonomy->terms()->save($term);
+
+		return back();
 	}
 
 	/**
@@ -56,9 +35,10 @@ class TermController extends Controller
 	 * @param Term $term
 	 * @return \Illuminate\Http\Response
 	 */
-	public function edit(Term $term)
+	public function edit(Taxonomy $taxonomy, Term $term)
 	{
 		return view('taxonomy::term.edit')->with([
+			'taxonomy' => $taxonomy,
 			'term' => $term
 		]);
 	}
@@ -72,9 +52,13 @@ class TermController extends Controller
 	 */
 	public function update(Request $request, Term $term)
 	{
+		if(!$request->has('slug')){
+			$request->offsetSet('slug', str_slug($request->label));
+		}
+
 		$term->update($request->all());
 
-		return redirect(route('taxonomy.edit', ['term' => $term->group]));
+		return redirect(route('taxonomy.edit', ['taxonomy' => $term->taxonomy]));
 	}
 
 	/**

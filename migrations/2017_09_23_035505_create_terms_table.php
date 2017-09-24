@@ -15,7 +15,10 @@ class CreateTermsTable extends Migration
 	{
 		Schema::create('terms', function (Blueprint $table) {
 			$table->increments('id');
+			$table->string('slug');
 			$table->string('label');
+			$table->string('description')->nullable();
+			$table->boolean('active')->default(1);
 			$table->integer('order');
 			$table->json('meta')->nullable();
 			$table->integer('taxonomy_id')->unsigned();

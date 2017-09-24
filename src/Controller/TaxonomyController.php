@@ -4,9 +4,9 @@ namespace OrckidLab\LaravelTaxonomy\Controller;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use OrckidLab\LaravelTaxonomy\Taxonomies;
-use OrckidLab\LaravelTaxonomy\Models\Term;
+use Illuminate\Validation\Rule;
 use OrckidLab\LaravelTaxonomy\Models\Taxonomy;
+use OrckidLab\LaravelTaxonomy\Taxonomies;
 
 class TaxonomyController extends Controller
 {
@@ -30,24 +30,18 @@ class TaxonomyController extends Controller
 	 */
 	public function store(Request $request)
 	{
+		if(!$request->has('slug')){
+			$request->offsetSet('slug', str_slug($request->label));
+		}
+
 		$this->validate($request, [
-			'name' => 'unique:taxonomies',
+			'label' => 'required',
+			'slug' => 'required|unique:taxonomies'
 		]);
 
-		Taxonomies::create($request->name);
+		Taxonomies::create($request->label, $request->slug);
 
 		return back();
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show($id)
-	{
-		//
 	}
 
 	/**
@@ -73,7 +67,19 @@ class TaxonomyController extends Controller
 	 */
 	public function update(Request $request, Taxonomy $taxonomy)
 	{
-		$taxonomy->terms()->save(new Term($request->only(['label', 'order'])));
+		if(!$request->has('slug')){
+			$request->offsetSet('slug', str_slug($request->label));
+		}
+
+		$this->validate($request, [
+			'label' => 'required',
+			'slug' => [
+				'required',
+				Rule::unique('taxonomies')->ignore($taxonomy->id),
+			]
+		]);
+
+		$taxonomy->update($request->all());
 
 		return back();
 	}

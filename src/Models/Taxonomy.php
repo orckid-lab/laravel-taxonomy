@@ -10,6 +10,11 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Taxonomy extends Model
 {
+	protected $fillable = [
+		'slug',
+		'label',
+	];
+
 	/**
 	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
 	 */
