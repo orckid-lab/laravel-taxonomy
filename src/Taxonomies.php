@@ -89,10 +89,10 @@ class Taxonomies
 	 */
 	public function add($term)
 	{
-		if(is_array($term)){
+		if (is_array($term)) {
 			$term = new Term($term);
 
-			if(!isset($term['slug'])){
+			if (!isset($term['slug'])) {
 				$term->slug = str_slug($term->label);
 			}
 		}
@@ -135,6 +135,14 @@ class Taxonomies
 	public function values()
 	{
 		return $this->group->terms()->pluck('id')->all();
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function terms()
+	{
+		return $this->group->terms;
 	}
 
 	/**
