@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use OrckidLab\LaravelTaxonomy\Models\Taxonomy;
 use OrckidLab\LaravelTaxonomy\Taxonomies;
+use OrckidLab\LaravelTaxonomy\View\DefaultTaxonomyView;
+use OrckidLab\LaravelTaxonomy\View\TaxonomyView;
 
 class TaxonomyController extends Controller
 {
@@ -48,14 +50,17 @@ class TaxonomyController extends Controller
 	 * Show the form for editing the specified resource.
 	 *
 	 * @param Taxonomy $taxonomy
-	 * @return \Illuminate\Http\Response
+	 * @return TaxonomyView
 	 */
 	public function edit(Taxonomy $taxonomy)
 	{
-		return view('taxonomy::taxonomy.edit')->with([
-			'taxonomy' => $taxonomy,
-			'terms' => $taxonomy->terms()->orderBy('order', 'asc')->get(),
-		]);
+		$customView = studly_case($taxonomy->slug) . "View";
+
+		$customViewClass = "App\Taxonomy\TaxonomyView\\$customView";
+
+		$instance = class_exists($customViewClass) ? new $customViewClass($taxonomy) : new DefaultTaxonomyView($taxonomy);
+
+		return $instance->edit();
 	}
 
 	/**

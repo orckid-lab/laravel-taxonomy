@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use OrckidLab\LaravelTaxonomy\Models\Taxonomy;
 use OrckidLab\LaravelTaxonomy\Models\Term;
+use OrckidLab\LaravelTaxonomy\View\DefaultTermView;
 
 class TermController extends Controller
 {
@@ -32,15 +33,19 @@ class TermController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 *
+	 * @param Taxonomy $taxonomy
 	 * @param Term $term
-	 * @return \Illuminate\Http\Response
+	 * @return DefaultTermView
 	 */
 	public function edit(Taxonomy $taxonomy, Term $term)
 	{
-		return view('taxonomy::term.edit')->with([
-			'taxonomy' => $taxonomy,
-			'term' => $term
-		]);
+		$customView = studly_case($term->taxonomy->slug) . "View";
+
+		$customViewClass = "App\Taxonomy\TermView\\$customView";
+
+		$instance = class_exists($customViewClass) ? new $customViewClass($taxonomy, $term) : new DefaultTermView($taxonomy, $term);
+
+		return $instance->edit();
 	}
 
 	/**
