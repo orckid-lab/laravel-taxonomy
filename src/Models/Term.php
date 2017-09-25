@@ -46,4 +46,13 @@ class Term extends Model
 	{
 		$this->attributes['meta'] = json_encode($value);
 	}
+
+	/**
+	 * @param $value
+	 * @return mixed|null
+	 */
+	public function getMetaAttribute($value)
+	{
+		return $value ? json_decode($value) : null;
+	}
 }
