@@ -50,7 +50,7 @@ class Taxonomies
 	 */
 	public function load($slug)
 	{
-		$this->group = Taxonomy::where('slug', $slug)->firstOrFail();
+		$this->group = Taxonomy::where('slug', $slug)->first();
 
 		return $this;
 	}
