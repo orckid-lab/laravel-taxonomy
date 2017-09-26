@@ -67,7 +67,7 @@ class TermForeignColumn
 	public function runCallback(Fluent $column, Fluent $foreign)
 	{
 		if($this->callback){
-			$this->{'callback'}($column, $foreign);
+			call_user_func($this->callback, $column, $foreign);
 		}
 
 		return $this;
