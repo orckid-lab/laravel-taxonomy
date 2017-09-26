@@ -41,9 +41,9 @@ class TermView
 	 */
 	public function edit()
 	{
-		return view($this->edit)->with([
+		return view($this->edit)->with($this->merge([
 			'taxonomy' => $this->taxonomy,
 			'term' => $this->term
-		]);
+		], method_exists($this, 'data') ?  $this->data() : []));
 	}
 }
