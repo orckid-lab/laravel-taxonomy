@@ -61,7 +61,7 @@ class TermForeignColumn
 	 * @param $onDelete
 	 * @return $this
 	 */
-	protected function onDelete($onDelete)
+	public function onDelete($onDelete)
 	{
 		$this->onDelete = $onDelete;
 

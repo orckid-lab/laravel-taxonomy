@@ -32,7 +32,7 @@ trait HasTerm
 	 * @param $attribute
 	 * @return mixed
 	 */
-	public function __get($attribute)
+	public function termGetter($attribute)
 	{
 		$pattern = '/^term/';
 
@@ -42,7 +42,7 @@ trait HasTerm
 			return $this->getTerm($attribute);
 		}
 
-		return parent::__get($attribute);
+		return null;
 	}
 
 	/**
@@ -50,7 +50,7 @@ trait HasTerm
 	 * @param $parameters
 	 * @return mixed
 	 */
-	public function __call($method, $parameters)
+	public function termCall($method, $parameters)
 	{
 		$pattern = '/^term/';
 
@@ -60,6 +60,6 @@ trait HasTerm
 			return $this->getTermRelationship($method);
 		}
 
-		return parent::__call($method, $parameters);
+		return null;
 	}
 }
