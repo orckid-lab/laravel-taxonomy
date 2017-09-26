@@ -22,9 +22,9 @@ class TermForeignColumn
 	protected $column;
 
 	/**
-	 * @var string
+	 * @var
 	 */
-	protected $onDelete = 'set null';
+	protected $callback;
 
 	/**
 	 * AssociateTerm constructor.
@@ -48,9 +48,7 @@ class TermForeignColumn
 	{
 		$instance = new static($column, $table);
 
-		if ($callback) {
-			$callback($instance);
-		}
+		$instance->setCallback($callback);
 
 		$instance->addForeign();
 
@@ -58,14 +56,11 @@ class TermForeignColumn
 	}
 
 	/**
-	 * @param $onDelete
-	 * @return $this
+	 * @param $callback
 	 */
-	public function onDelete($onDelete)
+	public function setCallback($callback)
 	{
-		$this->onDelete = $onDelete;
-
-		return $this;
+		$this->callback = $callback;
 	}
 
 	/**
@@ -74,23 +69,25 @@ class TermForeignColumn
 	protected function addForeign()
 	{
 		if($this->isBlueprintInstance()){
-			$this->table->integer($this->column)->nullable()->unsigned();
-
-			$this->table->foreign($this->column)
-				->references('id')
-				->on('terms')
-				->onDelete($this->onDelete);
+			$this->{'callback'}(
+				$this->table->integer($this->column)->nullable()->unsigned(),
+				$this->table->foreign($this->column)
+					->references('id')
+					->on('terms')
+					->onDelete($this->onDelete)
+			);
 
 			return $this;
 		}
 
 		Schema::table($this->table, function (Blueprint $table) {
-			$table->integer($this->column)->nullable()->unsigned();
-
-			$table->foreign($this->column)
-				->references('id')
-				->on('terms')
-				->onDelete($this->onDelete);
+			$this->{'callback'}(
+				$table->integer($this->column)->nullable()->unsigned(),
+				$table->foreign($this->column)
+					->references('id')
+					->on('terms')
+					->onDelete($this->onDelete)
+			);
 		});
 
 		return $this;
