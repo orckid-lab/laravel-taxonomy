@@ -4,6 +4,7 @@ namespace OrckidLab\LaravelTaxonomy\Helpers;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Fluent;
 
 /**
  * Class AssociateTerm
@@ -63,13 +64,22 @@ class TermForeignColumn
 		$this->callback = $callback;
 	}
 
+	public function runCallback(Fluent $column, Fluent $foreign)
+	{
+		if($this->callback){
+			$this->{'callback'}($column, $foreign);
+		}
+
+		return $this;
+	}
+
 	/**
 	 * @return $this
 	 */
 	protected function addForeign()
 	{
 		if($this->isBlueprintInstance()){
-			$this->{'callback'}(
+			$this->runCallback(
 				$this->table->integer($this->column)->nullable()->unsigned(),
 				$this->table->foreign($this->column)
 					->references('id')
@@ -81,7 +91,7 @@ class TermForeignColumn
 		}
 
 		Schema::table($this->table, function (Blueprint $table) {
-			$this->{'callback'}(
+			$this->runCallback(
 				$table->integer($this->column)->nullable()->unsigned(),
 				$table->foreign($this->column)
 					->references('id')
