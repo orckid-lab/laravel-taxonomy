@@ -84,7 +84,7 @@ class TermForeignColumn
 				$this->table->foreign($this->column)
 					->references('id')
 					->on('terms')
-					->onDelete($this->onDelete)
+					->onDelete('set null')
 			);
 
 			return $this;
@@ -96,7 +96,7 @@ class TermForeignColumn
 				$table->foreign($this->column)
 					->references('id')
 					->on('terms')
-					->onDelete($this->onDelete)
+					->onDelete('set null')
 			);
 		});
 
