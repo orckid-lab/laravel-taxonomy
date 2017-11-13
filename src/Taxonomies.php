@@ -15,7 +15,7 @@ class Taxonomies
 	/**
 	 * @var Taxonomy
 	 */
-	protected $group;
+	protected $taxonomy;
 
 	/**
 	 * @return static
@@ -50,7 +50,7 @@ class Taxonomies
 	 */
 	public function load($slug)
 	{
-		$this->group = Taxonomy::where('slug', $slug)->first();
+		$this->taxonomy = Taxonomy::where('slug', $slug)->first();
 
 		return $this;
 	}
@@ -72,13 +72,13 @@ class Taxonomies
 	 */
 	public function make($label, $slug)
 	{
-		$this->group = new Taxonomy;
+		$this->taxonomy = new Taxonomy;
 
-		$this->group->label = $label;
+		$this->taxonomy->label = $label;
 
-		$this->group->slug = !$slug ? str_slug($label) : $slug;
+		$this->taxonomy->slug = !$slug ? str_slug($label) : $slug;
 
-		$this->group->save();
+		$this->taxonomy->save();
 
 		return $this;
 	}
@@ -97,7 +97,7 @@ class Taxonomies
 			}
 		}
 
-		$this->group->terms()->save($term);
+		$this->taxonomy->terms()->save($term);
 
 		return $this;
 	}
@@ -108,7 +108,7 @@ class Taxonomies
 	 */
 	public function addMany($terms)
 	{
-		$this->group->terms()->saveMany($terms);
+		$this->taxonomy->terms()->saveMany($terms);
 
 		return $this;
 	}
@@ -118,7 +118,7 @@ class Taxonomies
 	 */
 	public function get()
 	{
-		return $this->group->terms;
+		return $this->taxonomy->terms;
 	}
 
 	/**
@@ -126,7 +126,7 @@ class Taxonomies
 	 */
 	public function pluck()
 	{
-		return $this->group->terms()->pluck('label', 'id');
+		return $this->taxonomy->terms()->pluck('label', 'id');
 	}
 
 	/**
@@ -134,7 +134,7 @@ class Taxonomies
 	 */
 	public function values()
 	{
-		return $this->group->terms()->pluck('id')->all();
+		return $this->taxonomy->terms()->pluck('id')->all();
 	}
 
 	/**
@@ -142,7 +142,7 @@ class Taxonomies
 	 */
 	public function terms()
 	{
-		return $this->group->terms;
+		return $this->taxonomy->terms;
 	}
 
 	/**
@@ -151,6 +151,11 @@ class Taxonomies
 	public static function all()
 	{
 		return Taxonomy::all();
+	}
+
+	public function taxonomy()
+	{
+		return $this->group;
 	}
 
 	/**
