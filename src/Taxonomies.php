@@ -138,6 +138,15 @@ class Taxonomies
 	}
 
 	/**
+	 * @param $slug
+	 * @return \Illuminate\Database\Eloquent\Model|null|static
+	 */
+	public function term($slug)
+	{
+		return $this->taxonomy->terms()->where('slug', $slug)->first();
+	}
+
+	/**
 	 * @return mixed
 	 */
 	public function terms()
@@ -153,6 +162,9 @@ class Taxonomies
 		return Taxonomy::all();
 	}
 
+	/**
+	 * @return null
+	 */
 	public function taxonomy()
 	{
 		return $this->group;
