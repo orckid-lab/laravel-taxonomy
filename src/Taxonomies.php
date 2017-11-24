@@ -167,7 +167,7 @@ class Taxonomies
 	 */
 	public function taxonomy()
 	{
-		return $this->group;
+		return $this->taxonomy;
 	}
 
 	/**
