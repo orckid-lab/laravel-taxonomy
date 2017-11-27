@@ -177,12 +177,27 @@ class Taxonomies
 		return $this->taxonomy;
 	}
 
+	/**
+	 * @param $taxonomy
+	 * @return $this
+	 */
+	public function setTaxonomy($taxonomy)
+	{
+		$this->taxonomy = $taxonomy;
+
+		return $this;
+	}
+
+	/**
+	 * @param $taxonomies_slug
+	 * @return mixed
+	 */
 	public static function batchLoad($taxonomies_slug)
 	{
 		return Taxonomy::whereIn('slug', $taxonomies_slug)
 			->get()
 			->mapWithKeys(function ($taxonomy) {
-				return [snake_case(studly_case($taxonomy->slug)) => $taxonomy];
+				return [snake_case(studly_case($taxonomy->slug)) => self::instance()->setTaxonomy($taxonomy)];
 			})
 			->all();
 	}
