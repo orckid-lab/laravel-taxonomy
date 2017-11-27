@@ -177,6 +177,16 @@ class Taxonomies
 		return $this->taxonomy;
 	}
 
+	public static function batchLoad($taxonomies_slug)
+	{
+		return Taxonomy::whereIn('slug', $taxonomies_slug)
+			->get()
+			->mapWithKeys(function ($taxonomy) {
+				return [snake_case(studly_case($taxonomy->slug)) => $taxonomy];
+			})
+			->all();
+	}
+
 	/**
 	 * @param $attribute
 	 * @return null
