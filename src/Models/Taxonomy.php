@@ -16,6 +16,13 @@ class Taxonomy extends Model
 	];
 
 	/**
+	 * @var array
+	 */
+	protected $with = [
+		'terms'
+	];
+
+	/**
 	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
 	 */
 	public function terms()

@@ -18,13 +18,6 @@ class Taxonomies
 	protected $taxonomy;
 
 	/**
-	 * @var array
-	 */
-	protected $with = [
-		'terms'
-	];
-
-	/**
 	 * @return static
 	 */
 	public static function instance()
