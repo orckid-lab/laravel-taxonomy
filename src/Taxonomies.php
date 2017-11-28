@@ -190,7 +190,7 @@ class Taxonomies
 		return Taxonomy::whereIn('slug', $taxonomies_slug)
 			->get()
 			->mapWithKeys(function ($taxonomy) {
-				return [snake_case(studly_case($taxonomy->slug)) => self::instance()->setTaxonomy($taxonomy)];
+				return [preg_match('-', '_', $taxonomy->slug) => self::instance()->setTaxonomy($taxonomy)];
 			})
 			->all();
 	}
