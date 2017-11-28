@@ -190,7 +190,7 @@ class Taxonomies
 		return Taxonomy::whereIn('slug', $taxonomies_slug)
 			->get()
 			->mapWithKeys(function (Taxonomy $taxonomy) {
-				$slug = preg_match('-', '_', $taxonomy->slug);
+				$slug = preg_replace('-', '_', $taxonomy->slug);
 
 				return [$slug => self::instance()->setTaxonomy($taxonomy)];
 			})
