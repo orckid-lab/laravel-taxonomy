@@ -189,8 +189,10 @@ class Taxonomies
 	{
 		return Taxonomy::whereIn('slug', $taxonomies_slug)
 			->get()
-			->mapWithKeys(function ($taxonomy) {
-				return [preg_match('-', '_', $taxonomy->slug) => self::instance()->setTaxonomy($taxonomy)];
+			->mapWithKeys(function (Taxonomy $taxonomy) {
+				$slug = preg_match('-', '_', $taxonomy->slug);
+
+				return [$slug => self::instance()->setTaxonomy($taxonomy)];
 			})
 			->all();
 	}
