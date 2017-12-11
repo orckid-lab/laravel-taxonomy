@@ -30,12 +30,13 @@ class Term extends Model
 	/**
 	 * @param $query
 	 * @param $taxonomy
+	 * @param string $column
 	 * @return mixed
 	 */
-	public function scopeFromTaxonomy($query, $taxonomy)
+	public function scopeFromTaxonomy($query, $taxonomy, $column = 'slug')
 	{
-		return $query->whereHas('taxonomy', function ($query) use ($taxonomy) {
-			return $query->where('slug', $taxonomy);
+		return $query->whereHas('taxonomy', function ($query) use ($taxonomy, $column) {
+			return $query->where($column, $taxonomy);
 		});
 	}
 
